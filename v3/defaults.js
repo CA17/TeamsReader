@@ -30,7 +30,7 @@ Original Page: [URL]`,
   'guide-timeout': 2000, // ms
   'mode': 'sepia',
   'printing-button': true,
-  'screenshot-button': false,
+  'screenshot-button': true,
   'note-button': true,
   'mail-button': true,
   'save-button': true,

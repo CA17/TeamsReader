@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Reader View",
+  "name": "TeamsReader",
   "description": "__MSG_description__",
   "default_locale": "en",
-  "version": "0.7.1",
+  "version": "1.0.1",
   "permissions": [
     "storage",
     "activeTab",
@@ -40,7 +40,7 @@
   "commands": {
     "_execute_action": {},
     "toggle-reader-view": {
-      "description": "Toggle the Reader View"
+      "description": "Toggle the TeamsReader"
     }
   },
   "web_accessible_resources": [{

@@ -12,7 +12,7 @@
     "message": "发送到邮箱 (command)"
   },
   "rd_save": {
-    "message": "保存HTML格式副本 (command)\n按Alt忽略便笺"
+    "message": "保存 Markdown 到 TeamsGPT (command)\n按Alt忽略便笺"
   },
   "rd_fullscreen": {
     "message": "切换全屏 (command)"

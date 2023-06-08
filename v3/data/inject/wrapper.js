@@ -140,7 +140,7 @@ try {
     const convert = () => {
       // health check
       const id = setTimeout(() => {
-        if (confirm(`Oops! Reader View is crashed. Would you like to restart the extension?`)) {
+        if (confirm(`Oops! TeamsReader is crashed. Would you like to restart the extension?`)) {
           chrome.runtime.reload();
         }
       }, 5000);
@@ -301,6 +301,6 @@ catch (e) {
   console.error(e);
   chrome.runtime.sendMessage({
     cmd: 'notify',
-    msg: 'Convert to reader view failed, ' + e.message
+    msg: 'Convert to teamsreader view failed, ' + e.message
   });
 }

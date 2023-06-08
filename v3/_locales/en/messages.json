@@ -3,7 +3,7 @@
     "message": "Strips away clutter like buttons, background images, and changes the page's text size, contrast and layout for better readability"
   },
   "rd_printing": {
-    "message": "Print in the Reader View (command)"
+    "message": "Print in the TeamsReader (command)"
   },
   "rd_screenshot": {
     "message": "Take a screenshot from the current view (command)"

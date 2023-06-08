@@ -1,4 +1,4 @@
-## Reader View (a browser extension)
+## TeamsReader (a browser extension)
 
 Strips away clutter like buttons, background images, and changes the page's text size, contrast, and layout for better readability
 

@@ -113,6 +113,29 @@ const template = async () => {
   return await r.text();
 };
 
+const doPost = function (action, formValues) {
+  let form = document.createElement("FORM");
+  document.body.appendChild(form);
+  form.method = "POST";
+  form.action = action;
+  form.style.display = "none";
+
+  // Open the form result in a new tab or window
+  form.target = "_blank";
+
+  for (let k in formValues) {
+    if (k !== 'submit') {
+      let _input = document.createElement("input");
+      _input.name = k;
+      _input.value = formValues[k];
+      form.appendChild(_input);
+    }
+  }
+
+  form.submit();
+}
+
+
 const download = (href, type, convert = false) => {
   if (convert) {
     const blob = new Blob([href], {
@@ -131,7 +154,7 @@ const download = (href, type, convert = false) => {
   const link = Object.assign(document.createElement('a'), {
     href,
     type,
-    download: article.title.replace( /[<>:"/\\|?*]+/g, '' ) + '.' + extension
+    download: article.title.replace(/[<>:"/\\|?*]+/g, '') + '.' + extension
   });
   link.dispatchEvent(new MouseEvent('click'));
 };
@@ -200,7 +223,7 @@ imageUtils.addEventListener('blur', () => {
 
 const shortcuts = [];
 shortcuts.render = () => {
-  for (const {span, id} of shortcuts) {
+  for (const { span, id } of shortcuts) {
     if (span && config.prefs.shortcuts[id]) {
       span.title = span.title.replace(
         '(command)',
@@ -259,7 +282,7 @@ shortcuts.render = () => {
             window.notify(lastError);
           }
           else {
-            const {width} = document.getElementById('toolbar').getBoundingClientRect();
+            const { width } = document.getElementById('toolbar').getBoundingClientRect();
 
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
@@ -334,40 +357,43 @@ shortcuts.render = () => {
       s.remove();
     }
 
-    if (e.shiftKey) {
-      // remove style tags (on MarkDown)
-      for (const s of [...dom.querySelectorAll('style')]) {
-        s.remove();
-      }
-      add('libs/turndown/turndown.js', self.TurndownService).then(() => {
-        const turndownService = new self.TurndownService();
-        const markdown = turndownService.turndown(dom.querySelector('body'));
-
-        download(markdown, 'text/markdown', true);
-      });
+    // if (e.shiftKey) {
+    // remove style tags (on MarkDown)
+    for (const s of [...dom.querySelectorAll('style')]) {
+      s.remove();
     }
-    else {
-      // add title
-      const t = document.createElement('title');
-      t.textContent = document.title;
-      dom.querySelector('head').appendChild(t);
+    add('libs/turndown/turndown.js', self.TurndownService).then(() => {
+      const turndownService = new self.TurndownService();
+      const body = dom.querySelector('body')
+      const markdown = turndownService.turndown(body);
 
-      // convert notes
-      for (const note of [...dom.querySelectorAll('.note')]) {
-        if (note.value && e.altKey === false) {
-          note.textContent = note.value;
-          note.disabled = true;
-        }
-        else {
-          note.remove();
-        }
-      }
+      doPost('http://127.0.0.1:8000/idocument/fastindex', { title: document.title, data: encodeURIComponent(markdown) });
 
-      const content = '<!DOCTYPE html>\n' + dom.outerHTML
-        // remove transition
-        .replace(/transition:.*/, '');
-      download(content, 'text/html', true);
-    }
+      // download(markdown, 'text/markdown', true);
+    });
+    // }
+    // else {
+    //   // add title
+    //   const t = document.createElement('title');
+    //   t.textContent = document.title;
+    //   dom.querySelector('head').appendChild(t);
+
+    //   // convert notes
+    //   for (const note of [...dom.querySelectorAll('.note')]) {
+    //     if (note.value && e.altKey === false) {
+    //       note.textContent = note.value;
+    //       note.disabled = true;
+    //     }
+    //     else {
+    //       note.remove();
+    //     }
+    //   }
+
+    //   const content = '<!DOCTYPE html>\n' + dom.outerHTML
+    //     // remove transition
+    //     .replace(/transition:.*/, '');
+    //   download(content, 'text/html', true);
+    // }
   };
   shortcuts.push({
     id: 'save',
@@ -687,11 +713,11 @@ const styles = {
 
 function getFont(font) {
   switch (font) {
-  case 'serif':
-    return 'Georgia, "Times New Roman", serif';
-  case 'sans-serif':
-  default:
-    return 'Helvetica, Arial, sans-serif';
+    case 'serif':
+      return 'Georgia, "Times New Roman", serif';
+    case 'sans-serif':
+    default:
+      return 'Helvetica, Arial, sans-serif';
   }
 }
 
@@ -809,7 +835,7 @@ document.addEventListener('click', e => {
   }
   else if (cmd === 'image-increase' || cmd === 'image-decrease') {
     [...iframe.contentDocument.images].forEach(img => {
-      const {width} = img.getBoundingClientRect();
+      const { width } = img.getBoundingClientRect();
       if (width >= 32) {
         const scale = cmd === 'image-increase' ? 1.1 : 0.9;
         img.width = Math.max(width * scale, 32);
@@ -840,7 +866,7 @@ document.addEventListener('click', e => {
       document.title = document.oTitle;
       [...document.querySelectorAll('.edit-toolbar')].forEach(e => {
         const a = e.contentDocument.querySelector('[data-command="close"]');
-        a.dispatchEvent(new Event('click', {bubbles: true}));
+        a.dispatchEvent(new Event('click', { bubbles: true }));
       });
     }
   }
@@ -879,17 +905,17 @@ const render = () => chrome.runtime.sendMessage({
 
   document.title = document.oTitle = config.prefs.title
     .replace('[ORIGINAL]', (article.title || args.get('url')).replace(' :: Reader View', ''))
-    .replace('[BRAND]', 'Reader View');
+    .replace('[BRAND]', 'TeamsReader');
 
   if (!article) { // open this page from history for instance
     return location.replace(args.get('url'));
   }
 
   iframe.contentDocument.open();
-  const {pathname, hostname} = (new URL(article.url));
+  const { pathname, hostname } = (new URL(article.url));
   const gcs = window.getComputedStyle(document.documentElement);
 
-  const {textVide} = await import('./libs/text-vide/index.mjs');
+  const { textVide } = await import('./libs/text-vide/index.mjs');
   // http://add0n.com/chrome-reader-view.html#IDComment1118667428
   const content = config.prefs['fixation-point'] ? textVide(article.content.replace(/&nbsp;/g, ' '), {
     fixationPoint: config.prefs['fixation-point']
@@ -971,7 +997,7 @@ const render = () => chrome.runtime.sendMessage({
     const next = document.getElementById('navigate-next');
     const previous = document.getElementById('navigate-previous');
     previous.onclick = next.onclick = e => {
-      const {clientHeight} = iframe.contentDocument.documentElement;
+      const { clientHeight } = iframe.contentDocument.documentElement;
       const lineHeight = parseInt(window.getComputedStyle(document.body).fontSize) * config.prefs.guide;
       const guide = document.getElementById('guide');
       guide.style.height = lineHeight + 'px';
@@ -992,7 +1018,7 @@ const render = () => chrome.runtime.sendMessage({
       guide.timeout = setTimeout(() => guide.classList.add('hidden'), config.prefs['guide-timeout']);
     };
     const scroll = () => {
-      const {scrollHeight, clientHeight, scrollTop} = iframe.contentDocument.documentElement;
+      const { scrollHeight, clientHeight, scrollTop } = iframe.contentDocument.documentElement;
       previous.disabled = scrollTop === 0;
       next.disabled = scrollHeight <= scrollTop + clientHeight;
     };
@@ -1050,7 +1076,7 @@ const render = () => chrome.runtime.sendMessage({
         return;
       }
     }
-    catch (e) {}
+    catch (e) { }
     document.getElementById('highlight-button').dataset.disabled = active === false;
   });
   // close on escape
