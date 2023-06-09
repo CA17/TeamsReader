@@ -367,7 +367,7 @@ shortcuts.render = () => {
       const body = dom.querySelector('body')
       const markdown = turndownService.turndown(body);
 
-      doPost('http://127.0.0.1:8000/idocument/fastindex', { title: document.title, data: encodeURIComponent(markdown) });
+      doPost('https://www.teamsgpt.cn/idocument/fastindex', { title: document.title, data: encodeURIComponent(markdown) });
 
       // download(markdown, 'text/markdown', true);
     });
